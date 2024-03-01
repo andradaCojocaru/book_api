@@ -1,0 +1,59 @@
+# Andrada-Ioana Cojocaru 322CA
+
+In implementarea temei am folosit fisierele parson.c si parson.h din sursa
+propusa pentru parsare input-ului pentru register, login si add_book.
+
+Am folosit urmatoarele fisiere:
+
+- requests -> implementarea din laboraor la care am mai adaugat parametrul
+token la get si post si am mai creat functia delete dupa modelul celei de get,
+doar ca am modificat tipul de metoda
+-----------------------------------------------------------------------------
+
+- client -> contine comenzile date de client
+
+  Cat timp nu primim comanda exit, tinem socketul deschis in asteptarea unei
+comenzi valide dintre:
+- register - primim de la tastatura user si password, se parseaza cu ajutorul
+functiei helper_login_register si se trimite serverului. Apoi se asteapta
+raspunsul acestuia care este fie ca a fost creat cu succes, fie userul este
+deja luat.
+- login - la fel ca in cazul comenzii register, se vor primi user-ul si
+parola si se vor parsa, urmand sa se trimita o cerere catre server.
+Se vor afisa mesaje corespunzatoare, fie credentialele sunt gresite,
+fie utilizatorul este conectat si se primeste cookie-ul ce va fi pastrat
+- enter_library - folosind cookie-ul primit, trimitem o cerere serverului
+pentru a intra in bibilioteca si a primi un token ce va fi de asemenea salvat.
+Se vor afisa mesaje relevante in functie de faptul in care m-am putut loga sau
+momentan nu sunt conectat la un cont.
+- get_books - folosind cookie-ul si token-ul trimit o cerere server-ului pentru
+a putea vedea cartile disponibile. Acestea se afiseaza daca am toate datele
+corecte sau se afiseaza mesajul de eroare ca inca nu sunt conectat la biblioteca
+pentru a le putea vizualiza.
+- get_book - primesc de la stdin id-ul cartii pe care o caut in biblioteca
+si trimit o cerere serverului in url-ul careia este regasita aceasta. Daca am
+toate informatiile corecte (token + cookie) si cartea exista, se va afisa,
+altfel se trimite mesajul ca nu exista cartea; in cazul in care nu sunt logat
+se trimite messajul corespunzator
+- add_book - primim de la tastatura informatiile pentru crearea cartii pe care
+le parsam cu ajutorul functiei helper_add_book. Se verifica corectitudinea datelor
+numarul de pagini nu e negativ. In cazul in care nu sunt corecte, se revine la 
+introducerea altor date. Cand totul este in regula se trimite cerere serverului.
+Se verifica faptul ca acesta nu primeste erori in cazul in care nu suntem logati.
+In caz contrar se va afisa un mesaj de succes.
+- delete_book - se primeste id-ul cartii, iar ca in cazul get_book se concateneaza
+url-ul cu id-ul si se trimite serverului, ce ne va transmite rezultatul - fie nu
+suntem logati, fie exista o eroare a faptului ca nu exista cartea, fie este totul
+in regula
+- logout - se transmite o comanda serverului si acesta va notifica daca am fost
+conectati sau nu; in cazul in care am fost conectati, vom sterge datele din
+cookie si token
+
+- orice alta comanda - se va afisa mesajul de comanda incorecta
+
+La iesirea din comanda exit, se va dezaloca memoria intregului program.
+
+---------------------------------------------------------------------------------
+Feedback : o tema foarte interesanta si cu aplicabilitate, mi-a placut foarte mult
+si a fost mai usor de parcurs si de realizat decat celelalte 2 - un mod placut
+de a incheia semestrul
